@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Specificity Explained</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-2: #111827;
+            --panel: #16213e;
+            --panel-2: #1e293b;
+            --line: rgba(255,255,255,0.08);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --blue: #74b9ff;
+            --green: #55efc4;
+            --yellow: #fdcb6e;
+            --orange: #e17055;
+            --red: #d63031;
+            --pink: #ff79c6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(180deg, var(--bg), #1a1a2e);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 30px 20px 60px;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: #f8fafc;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--muted);
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: rgba(22, 33, 62, 0.92);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 26px 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.25);
+        }
+
+        .card h2 {
+            margin: 0 0 18px;
+            font-size: clamp(1.5rem, 2.3vw, 2.1rem);
+            color: #f8fafc;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 24px 0 18px;
+        }
+
+        .level-box {
+            background: #0d1117;
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            padding: 20px 14px;
+            text-align: center;
+        }
+
+        .level-box .emoji {
+            display: block;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .level-box .name {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .level-box .desc {
+            color: var(--muted);
+            font-size: 0.83rem;
+            line-height: 1.5;
+        }
+
+        .a-1 { border-color: var(--blue); }
+        .a-1 .name { color: var(--blue); }
+        .a-2 { border-color: var(--green); }
+        .a-2 .name { color: var(--green); }
+        .a-3 { border-color: var(--yellow); }
+        .a-3 .name { color: var(--yellow); }
+        .a-4 { border-color: var(--orange); }
+        .a-4 .name { color: var(--orange); }
+        .a-5 { border-color: var(--red); }
+        .a-5 .name { color: var(--red); }
+
+        .score-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+            font-family: "Courier New", monospace;
+            font-weight: 700;
+        }
+
+        .score-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.04);
+            border: 2px solid var(--line);
+            padding: 10px 18px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+        }
+
+        .score-badge.blue { color: var(--blue); border-color: var(--blue); }
+        .score-badge.green { color: var(--green); border-color: var(--green); }
+        .score-badge.yellow { color: var(--yellow); border-color: var(--yellow); }
+        .score-badge.orange { color: var(--orange); border-color: var(--orange); }
+        .score-badge.red { color: var(--red); border-color: var(--red); }
+
+        .rule {
+            margin: 16px 0;
+            padding: 18px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+        }
+
+        .rule h3 {
+            margin: 0 0 10px;
+            color: #f8fafc;
+            font-size: 1.05rem;
+        }
+
+        .rule p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .code-box {
+            background: #0d1117;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 16px;
+            font-family: "Courier New", monospace;
+            font-size: 0.92rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .code-box .comment { color: #64748b; }
+        .code-box .selector { color: var(--pink); }
+        .code-box .prop { color: #7dd3fc; }
+        .code-box .value { color: #facc15; }
+        .code-box .htmltag { color: var(--blue); }
+        .code-box .htmlattr { color: #c4b5fd; }
+        .code-box .htmlstring { color: var(--green); }
+
+        .battle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 18px 0;
+        }
+
+        .fighter {
+            min-width: 215px;
+            background: #0d1117;
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+        }
+
+        .fighter.winner {
+            border-color: var(--green);
+            box-shadow: 0 0 16px rgba(85, 239, 196, 0.2);
+        }
+
+        .fighter.loser {
+            opacity: 0.65;
+        }
+
+        .fighter-label {
+            font-family: "Courier New", monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .fighter-score {
+            font-family: "Courier New", monospace;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 7px;
+            display: inline-block;
+        }
+
+        .winner .fighter-score {
+            background: rgba(85, 239, 196, 0.2);
+            color: var(--green);
+        }
+
+        .loser .fighter-score {
+            background: rgba(214, 48, 49, 0.16);
+            color: var(--red);
+        }
+
+        .vs {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--red);
+        }
+
+        .result {
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: rgba(85, 239, 196, 0.09);
+            border: 1px solid rgba(85, 239, 196, 0.3);
+            color: var(--green);
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        .demo-area {
+            display: grid;
+            gap: 12px;
+        }
+
+        .demo-area p {
+            margin: 0;
+            background: rgba(116,185,255,0.08);
+            border-left: 4px solid var(--blue);
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--text);
+        }
+
+        .demo-area .green {
+            border-left-color: var(--green);
+            background: rgba(85,239,196,0.08);
+            color: var(--text);
+        }
+
+        .demo-area .yellow {
+            border-left-color: var(--yellow);
+            background: rgba(253,203,110,0.08);
+        }
+
+        .demo-area .orange {
+            border-left-color: var(--orange);
+            background: rgba(225,112,85,0.08);
+        }
+
+        .demo-area .red {
+            border-left-color: var(--red);
+            background: rgba(214,48,49,0.08);
+            color: var(--text);
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-left: 8px;
+            background: rgba(85,239,196,0.12);
+            color: var(--green);
+        }
+
+        .rules-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .rule-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .rule-item span {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .rule-item p {
+            margin: 0;
+            color: var(--text);
+        }
+
+        code {
+            font-family: "Courier New", monospace;
+            background: rgba(255,255,255,0.06);
+            border-radius: 5px;
+            padding: 2px 7px;
+        }
+
+        .summary {
+            background: #0d1117;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 30px 18px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .summary h2 {
+            margin: 0 0 20px;
+            color: #f8fafc;
+        }
+
+        .summary p {
+            margin: 6px 0;
+            line-height: 2;
+            color: var(--text);
+            font-family: "Courier New", monospace;
+            font-size: 1.15rem;
+        }
+
+        .summary strong {
+            font-weight: 800;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .card,
+            .summary {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .battle {
+                flex-direction: column;
+            }
+
+            .fighter {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>🎯 CSS Specificity Explained</h1>
+        <p class="subtitle">When multiple rules target the same element, the browser asks: which one wins?</p>
+
+        <div class="card">
+            <h2>🏢 Think of it like a company hierarchy</h2>
+            <div class="intro-grid">
+                <div class="level-box a-1">
+                    <span class="emoji">👷</span>
+                    <div class="name">Worker</div>
+                    <div class="desc">Element selector<br><code>p</code> <code>div</code> <code>h1</code></div>
+                </div>
+                <div class="level-box a-2">
+                    <span class="emoji">👨‍💼</span>
+                    <div class="name">Manager</div>
+                    <div class="desc">Class selector<br><code>.btn</code> <code>.card</code></div>
+                </div>
+                <div class="level-box a-3">
+                    <span class="emoji">👔</span>
+                    <div class="name">Director</div>
+                    <div class="desc">ID selector<br><code>#header</code></div>
+                </div>
+                <div class="level-box a-4">
+                    <span class="emoji">👑</span>
+                    <div class="name">CEO</div>
+                    <div class="desc">Inline style<br><code>style=""</code></div>
+                </div>
+                <div class="level-box a-5">
+                    <span class="emoji">⚖️</span>
+                    <div class="name">The Law</div>
+                    <div class="desc">!important<br><code>!important</code></div>
+                </div>
+            </div>
+
+            <div class="score-row">
+                <span class="score-badge blue">0-0-1</span>
+                <span class="score-badge green">0-1-0</span>
+                <span class="score-badge yellow">1-0-0</span>
+                <span class="score-badge orange">1-0-0-0</span>
+                <span class="score-badge red">∞</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 The scoring system</h2>
+            <div class="rule">
+                <h3>Specificity is like a 3-digit score: A - B - C</h3>
+                <p>
+                    A = number of ID selectors<br>
+                    B = number of class selectors<br>
+                    C = number of element selectors
+                </p>
+            </div>
+
+            <div class="code-box"><span class="comment">/* Compare like numbers */</span>
+0-0-1 vs 0-1-0  → <span class="value">0-1-0 WINS</span>
+0-1-0 vs 1-0-0  → <span class="value">1-0-0 WINS</span></div>
+        </div>
+
+        <div class="card">
+            <h2>🧩 Simple example</h2>
+            <div class="code-box"><span class="comment">/* Rule 1: element selector */</span>
+<span class="selector">p</span> { <span class="prop">color</span>: <span class="value">blue</span>; }
+
+<span class="comment">/* Rule 2: class selector */</span>
+<span class="selector">.greeting</span> { <span class="prop">color</span>: <span class="value">green</span>; }
+
+<span class="comment">/* Rule 3: id selector */</span>
+<span class="selector">#special</span> { <span class="prop">color</span>: <span class="value">red</span>; }
+
+<span class="comment">/* HTML */</span>
+<span class="htmltag">&lt;p</span> <span class="htmlattr">id=</span><span class="htmlstring">"special"</span> <span class="htmlattr">class=</span><span class="htmlstring">"greeting"</span><span class="htmltag">&gt;</span>What color am I?<span class="htmltag">&lt;/p&gt;</span></div>
+
+            <div class="result">✅ Answer: RED. <code>#special</code> has score 1-0-0 and beats .greeting (0-1-0).</div>
+        </div>
+
+        <div class="card">
+            <h2>⚔️ Specificity battles</h2>
+
+            <div class="rule">
+                <h3>Battle 1: element vs class</h3>
+                <div class="code-box"><span class="selector">p</span> { <span class="prop">color</span>: <span class="value">blue</span>; }
+<span class="selector">.intro</span> { <span class="prop">color</span>: <span class="value">green</span>; }</div>
+                <div class="battle">
+                    <div class="fighter loser">
+                        <div class="fighter-label" style="color: var(--blue);">p</div>
+                        <div class="fighter-score">0-0-1</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="fighter winner">
+                        <div class="fighter-label" style="color: var(--green);">.intro</div>
+                        <div class="fighter-score">0-1-0</div>
+                    </div>
+                </div>
+                <div class="result">🏆 <strong>.intro WINS</strong> — class beats element.</div>
+            </div>
+
+            <div class="rule">
+                <h3>Battle 2: class vs id</h3>
+                <div class="code-box"><span class="selector">.highlight</span> { <span class="prop">color</span>: <span class="value">green</span>; }
+<span class="selector">#title</span> { <span class="prop">color</span>: <span class="value">red</span>; }</div>
+                <div class="battle">
+                    <div class="fighter loser">
+                        <div class="fighter-label" style="color: var(--green);">.highlight</div>
+                        <div class="fighter-score">0-1-0</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="fighter winner">
+                        <div class="fighter-label" style="color: var(--yellow);">#title</div>
+                        <div class="fighter-score">1-0-0</div>
+                    </div>
+                </div>
+                <div class="result">🏆 <strong>#title WINS</strong> — id beats class.</div>
+            </div>
+
+            <div class="rule">
+                <h3>Battle 3: same specificity</h3>
+                <div class="code-box"><span class="selector">.card</span> { <span class="prop">color</span>: <span class="value">blue</span>; }
+<span class="selector">.box</span> { <span class="prop">color</span>: <span class="value">red</span>; }</div>
+                <div class="battle">
+                    <div class="fighter loser">
+                        <div class="fighter-label" style="color: var(--blue);">.card</div>
+                        <div class="fighter-score">0-1-0 (first)</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="fighter winner">
+                        <div class="fighter-label" style="color: var(--green);">.box</div>
+                        <div class="fighter-score">0-1-0 (last)</div>
+                    </div>
+                </div>
+                <div class="result">🏆 <strong>.box WINS</strong> — equal scores use the last rule.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>👁️ Live demo</h2>
+            <div class="demo-area">
+                <p>I'm styled by <strong>element selector</strong> <code>p</code> → score <strong>0-0-1</strong> <span class="tag">BLUE</span></p>
+                <p class="green">I have <strong>class .make-green</strong> → score <strong>0-1-0</strong> <span class="tag">GREEN</span></p>
+                <p class="yellow">I have class and <strong>id #make-yellow</strong> → score <strong>1-0-0</strong> <span class="tag">YELLOW</span></p>
+                <p class="orange">I have class, id, and <strong>inline style</strong> → inline wins <span class="tag">ORANGE</span></p>
+                <p class="red">I also have <strong>!important</strong> → nuclear override <span class="tag">RED</span></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📜 Golden rules</h2>
+            <div class="rules-list">
+                <div class="rule-item">
+                    <span>1️⃣</span>
+                    <p><strong>Use classes for styling.</strong> They are flexible and usually low specificity.</p>
+                </div>
+                <div class="rule-item">
+                    <span>2️⃣</span>
+                    <p><strong>Avoid IDs for styling.</strong> Use IDs for anchors and JavaScript hooks.</p>
+                </div>
+                <div class="rule-item">
+                    <span>3️⃣</span>
+                    <p><strong>Do not use inline styles</strong> unless absolutely necessary.</p>
+                </div>
+                <div class="rule-item">
+                    <span>4️⃣</span>
+                    <p><strong>Never overuse !important.</strong> It can cause a maintenance nightmare.</p>
+                </div>
+                <div class="rule-item">
+                    <span>5️⃣</span>
+                    <p><strong>Equal specificity:</strong> the last rule wins.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <h2>⚡ Quick summary</h2>
+            <p><strong>p</strong> = <span style="color: var(--blue);">0-0-1</span> &nbsp;&nbsp; Worker</p>
+            <p><strong>.class</strong> = <span style="color: var(--green);">0-1-0</span> &nbsp;&nbsp; Manager</p>
+            <p><strong>#id</strong> = <span style="color: var(--yellow);">1-0-0</span> &nbsp;&nbsp; Director</p>
+            <p><strong>style=""</strong> = <span style="color: var(--orange);">1-0-0-0</span> &nbsp;&nbsp; CEO</p>
+            <p><strong>!important</strong> = <span style="color: var(--red);">∞</span> &nbsp;&nbsp; The Law</p>
+        </div>
+    </div>
+</body>
+</html>

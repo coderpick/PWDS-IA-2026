@@ -1,0 +1,3242 @@
+# HTML Crash Course - Single HTML File ```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Crash Course - Complete Guide</title>
+    <style>
+      /* ==================== CSS Reset & Variables ==================== */
+      :root {
+        --primary: #6c5ce7;
+        --primary-light: #a29bfe;
+        --secondary: #00cec9;
+        --accent: #fd79a8;
+        --dark: #2d3436;
+        --light: #dfe6e9;
+        --white: #ffffff;
+        --bg: #0a0a1a;
+        --card-bg: #12122a;
+        --code-bg: #1a1a3e;
+        --success: #00b894;
+        --warning: #fdcb6e;
+        --danger: #e17055;
+        --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        --gradient-2: linear-gradient(135deg, #00cec9, #55efc4);
+        --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
+        --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        --radius: 16px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg);
+        color: #c8c8e0;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ==================== Scrollbar ==================== */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+      }
+
+      /* ==================== Navigation ==================== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(10, 10, 26, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(108, 92, 231, 0.2);
+        padding: 0 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .navbar.scrolled {
+        padding: 0 2rem;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
+
+      .nav-logo {
+        font-size: 1.6rem;
+        font-weight: 800;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-logo span {
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: #c8c8e0;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-links a:hover {
+        color: var(--white);
+        background: rgba(108, 92, 231, 0.2);
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001;
+      }
+
+      .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: var(--primary-light);
+        border-radius: 3px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 6px);
+      }
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -6px);
+      }
+
+      /* ==================== Hero Section ==================== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 6rem 2rem 4rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background:
+          radial-gradient(
+            circle at 30% 50%,
+            rgba(108, 92, 231, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 70% 50%,
+            rgba(0, 206, 201, 0.06) 0%,
+            transparent 50%
+          );
+        animation: heroFloat 20s ease-in-out infinite;
+      }
+
+      @keyframes heroFloat {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        33% {
+          transform: translate(30px, -30px) rotate(1deg);
+        }
+        66% {
+          transform: translate(-20px, 20px) rotate(-1deg);
+        }
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+      }
+
+      .hero-badge {
+        display: inline-block;
+        padding: 0.4rem 1.2rem;
+        background: rgba(108, 92, 231, 0.15);
+        border: 1px solid rgba(108, 92, 231, 0.3);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--primary-light);
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.8s ease;
+      }
+
+      .hero h1 .gradient-text {
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: #8888aa;
+        max-width: 650px;
+        margin: 0 auto 2.5rem;
+        animation: fadeInUp 1s ease;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 1.2s ease;
+      }
+
+      .btn {
+        padding: 0.9rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background: var(--gradient-1);
+        color: var(--white);
+        box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(108, 92, 231, 0.6);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary-light);
+        border: 2px solid rgba(108, 92, 231, 0.4);
+      }
+
+      .btn-outline:hover {
+        background: rgba(108, 92, 231, 0.1);
+        transform: translateY(-3px);
+        border-color: var(--primary);
+      }
+
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 4rem;
+        animation: fadeInUp 1.4s ease;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        background: var(--gradient-2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #6666aa;
+        margin-top: 0.3rem;
+      }
+
+      /* ==================== Floating Particles ==================== */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: particleFloat linear infinite;
+      }
+
+      @keyframes particleFloat {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.3;
+        }
+        90% {
+          opacity: 0.3;
+        }
+        100% {
+          transform: translateY(-100px) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* ==================== Section Styles ==================== */
+      .section {
+        padding: 5rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .section-badge {
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        background: rgba(108, 92, 231, 0.1);
+        border: 1px solid rgba(108, 92, 231, 0.2);
+        border-radius: 50px;
+        font-size: 0.8rem;
+        color: var(--primary-light);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+      }
+
+      .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 1rem;
+      }
+
+      .section-desc {
+        color: #8888aa;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* ==================== TOC Cards ==================== */
+      .toc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .toc-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(108, 92, 231, 0.1);
+        border-radius: var(--radius);
+        padding: 1.8rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .toc-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-1);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+      }
+
+      .toc-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .toc-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(108, 92, 231, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .toc-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .toc-card h3 {
+        color: var(--white);
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .toc-card p {
+        font-size: 0.85rem;
+        color: #7777aa;
+      }
+
+      .toc-number {
+        position: absolute;
+        top: 1rem;
+        right: 1.2rem;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: rgba(108, 92, 231, 0.08);
+      }
+
+      /* ==================== Lesson Sections ==================== */
+      .lesson {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        border-bottom: 1px solid rgba(108, 92, 231, 0.08);
+      }
+
+      .lesson-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .lesson-number {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-1);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--white);
+        flex-shrink: 0;
+      }
+
+      .lesson-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--white);
+      }
+
+      .lesson-desc {
+        font-size: 1.05rem;
+        color: #8888aa;
+        margin-bottom: 2rem;
+        padding-left: 66px;
+      }
+
+      /* ==================== Info Box ==================== */
+      .info-box {
+        background: rgba(108, 92, 231, 0.08);
+        border-left: 4px solid var(--primary);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .info-box.success {
+        background: rgba(0, 184, 148, 0.08);
+        border-color: var(--success);
+      }
+
+      .info-box.warning {
+        background: rgba(253, 203, 110, 0.08);
+        border-color: var(--warning);
+      }
+
+      .info-box.danger {
+        background: rgba(225, 112, 85, 0.08);
+        border-color: var(--danger);
+      }
+
+      .info-box .info-title {
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* ==================== Code Blocks ==================== */
+      .code-container {
+        background: var(--code-bg);
+        border: 1px solid rgba(108, 92, 231, 0.15);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow);
+      }
+
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 1.2rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(108, 92, 231, 0.1);
+      }
+
+      .code-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .code-dots span {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .code-dots span:nth-child(1) {
+        background: #ff5f57;
+      }
+      .code-dots span:nth-child(2) {
+        background: #febc2e;
+      }
+      .code-dots span:nth-child(3) {
+        background: #28c840;
+      }
+
+      .code-lang {
+        font-size: 0.75rem;
+        color: #6666aa;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .copy-btn {
+        background: rgba(108, 92, 231, 0.2);
+        color: var(--primary-light);
+        border: 1px solid rgba(108, 92, 231, 0.3);
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+      }
+
+      .copy-btn:hover {
+        background: rgba(108, 92, 231, 0.4);
+      }
+
+      .code-body {
+        padding: 1.5rem;
+        overflow-x: auto;
+        font-size: 0.9rem;
+      }
+
+      .code-body pre {
+        font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+        line-height: 1.8;
+        white-space: pre;
+        color: #c8c8e0;
+      }
+
+      /* Syntax highlighting */
+      .tag {
+        color: #e84393;
+      }
+      .attr {
+        color: #fdcb6e;
+      }
+      .value {
+        color: #55efc4;
+      }
+      .comment {
+        color: #636e88;
+        font-style: italic;
+      }
+      .doctype {
+        color: #a29bfe;
+      }
+      .text-content {
+        color: #dfe6e9;
+      }
+      .entity {
+        color: #fd79a8;
+      }
+
+      /* ==================== Use Case Box ==================== */
+      .use-case {
+        background: var(--card-bg);
+        border: 1px solid rgba(0, 206, 201, 0.15);
+        border-radius: var(--radius);
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+
+      .use-case-title {
+        color: var(--secondary);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .use-case-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 0.8rem;
+      }
+
+      .use-case-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.92rem;
+      }
+
+      .use-case-list li::before {
+        content: "✦";
+        color: var(--secondary);
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* ==================== Real World Example ==================== */
+      .real-example {
+        background: var(--card-bg);
+        border: 1px solid rgba(253, 121, 168, 0.15);
+        border-radius: var(--radius);
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+
+      .real-example-title {
+        color: var(--accent);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* ==================== Preview Box ==================== */
+      .preview-box {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 1rem 0;
+        color: var(--dark);
+      }
+
+      .preview-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #6666aa;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* ==================== Element Grid ==================== */
+      .element-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      .element-card {
+        background: rgba(108, 92, 231, 0.05);
+        border: 1px solid rgba(108, 92, 231, 0.1);
+        border-radius: 12px;
+        padding: 1.2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .element-card:hover {
+        border-color: rgba(108, 92, 231, 0.3);
+        transform: translateY(-3px);
+      }
+
+      .element-tag {
+        font-family: "Fira Code", monospace;
+        color: #e84393;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .element-desc {
+        font-size: 0.8rem;
+        color: #7777aa;
+      }
+
+      /* ==================== Comparison Table ==================== */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .comparison-table thead {
+        background: rgba(108, 92, 231, 0.15);
+      }
+
+      .comparison-table th {
+        color: var(--white);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .comparison-table td {
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid rgba(108, 92, 231, 0.08);
+        font-size: 0.9rem;
+      }
+
+      .comparison-table tr:hover td {
+        background: rgba(108, 92, 231, 0.05);
+      }
+
+      .comparison-table code {
+        background: rgba(108, 92, 231, 0.15);
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.85rem;
+        color: #e84393;
+      }
+
+      /* ==================== Interactive Demo ==================== */
+      .demo-container {
+        background: var(--card-bg);
+        border: 1px solid rgba(108, 92, 231, 0.15);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin: 2rem 0;
+      }
+
+      .demo-tabs {
+        display: flex;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(108, 92, 231, 0.1);
+      }
+
+      .demo-tab {
+        padding: 0.8rem 1.5rem;
+        background: transparent;
+        border: none;
+        color: #7777aa;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .demo-tab.active {
+        color: var(--white);
+        background: rgba(108, 92, 231, 0.1);
+      }
+
+      .demo-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gradient-1);
+      }
+
+      .demo-content {
+        display: none;
+        padding: 2rem;
+      }
+
+      .demo-content.active {
+        display: block;
+      }
+
+      /* ==================== Progress Bar ==================== */
+      .progress-wrapper {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(108, 92, 231, 0.1);
+        z-index: 999;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--gradient-1);
+        width: 0%;
+        transition: width 0.1s ease;
+      }
+
+      /* ==================== Back to Top ==================== */
+      .back-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-1);
+        border: none;
+        border-radius: 14px;
+        color: var(--white);
+        font-size: 1.3rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .back-to-top:hover {
+        transform: translateY(-3px);
+      }
+
+      /* ==================== Footer ==================== */
+      .footer {
+        background: var(--card-bg);
+        border-top: 1px solid rgba(108, 92, 231, 0.1);
+        padding: 3rem 2rem;
+        text-align: center;
+        margin-top: 4rem;
+      }
+
+      .footer p {
+        color: #6666aa;
+        font-size: 0.9rem;
+      }
+
+      .footer .heart {
+        color: var(--accent);
+      }
+
+      /* ==================== Sub-section divider ==================== */
+      .sub-divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(108, 92, 231, 0.2),
+          transparent
+        );
+        margin: 2.5rem 0;
+      }
+
+      /* ==================== Inline code ==================== */
+      code.inline {
+        background: rgba(108, 92, 231, 0.15);
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.88rem;
+        color: #e84393;
+      }
+
+      /* ==================== Animations ==================== */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ==================== Cheat Sheet Grid ==================== */
+      .cheat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .cheat-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(108, 92, 231, 0.1);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+      }
+
+      .cheat-card h4 {
+        color: var(--white);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .cheat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(108, 92, 231, 0.05);
+        font-size: 0.88rem;
+      }
+
+      .cheat-item:last-child {
+        border-bottom: none;
+      }
+
+      .cheat-element {
+        font-family: "Fira Code", monospace;
+        color: #e84393;
+      }
+
+      /* ==================== Responsive ==================== */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+          position: fixed;
+          top: 70px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(10, 10, 26, 0.98);
+          flex-direction: column;
+          padding: 2rem;
+          gap: 0.5rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: flex;
+        }
+
+        .hero-stats {
+          gap: 1.5rem;
+        }
+
+        .lesson-desc {
+          padding-left: 0;
+        }
+
+        .use-case-list {
+          grid-template-columns: 1fr;
+        }
+
+        .element-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .cheat-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .comparison-table {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .element-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a href="#hero" class="nav-logo"> <span>⚡</span> HTML Crash Course </a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#toc">📚 Topics</a></li>
+          <li><a href="#lesson1">Basics</a></li>
+          <li><a href="#lesson5">Text</a></li>
+          <li><a href="#lesson8">Media</a></li>
+          <li><a href="#lesson10">Forms</a></li>
+          <li><a href="#lesson13">Semantic</a></li>
+          <li><a href="#cheatsheet">Cheat Sheet</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==================== PROGRESS BAR ==================== -->
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+      <div class="particles" id="particles"></div>
+      <div class="hero-content">
+        <div class="hero-badge">🔥 Complete Beginner-Friendly Guide</div>
+        <h1>
+          Master <span class="gradient-text">HTML</span><br />From Zero to Hero
+        </h1>
+        <p>
+          Learn every HTML element with real-world use cases, practical
+          examples, and beautiful code snippets — all in one interactive page.
+        </p>
+        <div class="hero-buttons">
+          <a href="#toc" class="btn btn-primary">🚀 Start Learning</a>
+          <a href="#cheatsheet" class="btn btn-outline">📋 Cheat Sheet</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Lessons</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Code Examples</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100+</div>
+            <div class="stat-label">Elements Covered</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TABLE OF CONTENTS ==================== -->
+    <section class="section" id="toc">
+      <div class="section-header">
+        <div class="section-badge">Roadmap</div>
+        <h2 class="section-title">What You'll Learn</h2>
+        <p class="section-desc">
+          Click on any topic to jump directly to that section
+        </p>
+      </div>
+      <div class="toc-grid">
+        <a href="#lesson1" class="toc-card fade-in">
+          <div class="toc-number">01</div>
+          <span class="toc-icon">🏗️</span>
+          <h3>HTML Document Structure</h3>
+          <p>DOCTYPE, html, head, body & boilerplate</p>
+        </a>
+        <a href="#lesson2" class="toc-card fade-in">
+          <div class="toc-number">02</div>
+          <span class="toc-icon">🏷️</span>
+          <h3>Meta Tags & SEO</h3>
+          <p>Charset, viewport, description & Open Graph</p>
+        </a>
+        <a href="#lesson3" class="toc-card fade-in">
+          <div class="toc-number">03</div>
+          <span class="toc-icon">📝</span>
+          <h3>Headings & Paragraphs</h3>
+          <p>h1-h6 hierarchy & paragraph formatting</p>
+        </a>
+        <a href="#lesson4" class="toc-card fade-in">
+          <div class="toc-number">04</div>
+          <span class="toc-icon">✍️</span>
+          <h3>Text Formatting</h3>
+          <p>Bold, italic, underline, mark, code & more</p>
+        </a>
+        <a href="#lesson5" class="toc-card fade-in">
+          <div class="toc-number">05</div>
+          <span class="toc-icon">🔗</span>
+          <h3>Links & Navigation</h3>
+          <p>Anchors, targets, email & phone links</p>
+        </a>
+        <a href="#lesson6" class="toc-card fade-in">
+          <div class="toc-number">06</div>
+          <span class="toc-icon">🖼️</span>
+          <h3>Images & Figures</h3>
+          <p>img, figure, figcaption & responsive images</p>
+        </a>
+        <a href="#lesson7" class="toc-card fade-in">
+          <div class="toc-number">07</div>
+          <span class="toc-icon">📋</span>
+          <h3>Lists</h3>
+          <p>Ordered, unordered, nested & description lists</p>
+        </a>
+        <a href="#lesson8" class="toc-card fade-in">
+          <div class="toc-number">08</div>
+          <span class="toc-icon">📊</span>
+          <h3>Tables</h3>
+          <p>Tables, headers, spanning & real data tables</p>
+        </a>
+        <a href="#lesson9" class="toc-card fade-in">
+          <div class="toc-number">09</div>
+          <span class="toc-icon">📝</span>
+          <h3>Forms - Basics</h3>
+          <p>Input types, labels, buttons & form structure</p>
+        </a>
+        <a href="#lesson10" class="toc-card fade-in">
+          <div class="toc-number">10</div>
+          <span class="toc-icon">🎛️</span>
+          <h3>Forms - Advanced</h3>
+          <p>Select, textarea, datalist & validation</p>
+        </a>
+        <a href="#lesson11" class="toc-card fade-in">
+          <div class="toc-number">11</div>
+          <span class="toc-icon">🎬</span>
+          <h3>Audio & Video</h3>
+          <p>Embedding media, controls & sources</p>
+        </a>
+        <a href="#lesson12" class="toc-card fade-in">
+          <div class="toc-number">12</div>
+          <span class="toc-icon">📐</span>
+          <h3>Semantic HTML</h3>
+          <p>header, nav, main, article, section, footer</p>
+        </a>
+        <a href="#lesson13" class="toc-card fade-in">
+          <div class="toc-number">13</div>
+          <span class="toc-icon">📦</span>
+          <h3>Div & Span</h3>
+          <p>Generic containers & inline wrappers</p>
+        </a>
+        <a href="#lesson14" class="toc-card fade-in">
+          <div class="toc-number">14</div>
+          <span class="toc-icon">🧩</span>
+          <h3>iFrame & Embed</h3>
+          <p>Embedding external content & maps</p>
+        </a>
+        <a href="#lesson15" class="toc-card fade-in">
+          <div class="toc-number">15</div>
+          <span class="toc-icon">♿</span>
+          <h3>Accessibility & Best Practices</h3>
+          <p>ARIA, alt text, roles & a11y tips</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== LESSON 1: HTML Document Structure ==================== -->
+    <div class="lesson fade-in" id="lesson1">
+      <div class="lesson-header">
+        <div class="lesson-number">1</div>
+        <h2 class="lesson-title">HTML Document Structure</h2>
+      </div>
+      <p class="lesson-desc">
+        Every HTML page starts with a standard structure called the
+        "boilerplate". This tells the browser what kind of document it is and
+        how to render it.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>                    <span class="comment">&lt;!-- Declares HTML5 document --&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"en"</span><span class="tag">&gt;</span>                   <span class="comment">&lt;!-- Root element + language --&gt;</span>
+<span class="tag">&lt;head&gt;</span>                               <span class="comment">&lt;!-- Metadata container --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>            <span class="comment">&lt;!-- Character encoding --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"viewport"</span>
+          <span class="attr">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span><span class="text-content">My Website</span><span class="tag">&lt;/title&gt;</span>          <span class="comment">&lt;!-- Browser tab title --&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>                               <span class="comment">&lt;!-- Visible content --&gt;</span>
+    <span class="tag">&lt;h1&gt;</span><span class="text-content">Hello, World!</span><span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Welcome to my website.</span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>Every single web page requires this structure</li>
+          <li>Landing pages, portfolios, blogs, e-commerce sites</li>
+          <li>Email templates (simplified version)</li>
+          <li>Web applications built with any framework</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">💡 Key Points</div>
+        <p>
+          <code class="inline">&lt;!DOCTYPE html&gt;</code> is NOT a tag — it's
+          a declaration that tells browsers to use HTML5 standards mode. Without
+          it, browsers may render pages in "quirks mode".
+        </p>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Business Landing Page
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"viewport"</span> <span class="attr">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"description"</span> <span class="attr">content</span>=<span class="value">"Premium coffee delivered to your door"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span><span class="text-content">BrewCraft Coffee | Fresh Roasted Daily</span><span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="value">"icon"</span> <span class="attr">href</span>=<span class="value">"favicon.ico"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="value">"stylesheet"</span> <span class="attr">href</span>=<span class="value">"styles.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;header&gt;</span><span class="text-content">...</span><span class="tag">&lt;/header&gt;</span>
+    <span class="tag">&lt;main&gt;</span><span class="text-content">...</span><span class="tag">&lt;/main&gt;</span>
+    <span class="tag">&lt;footer&gt;</span><span class="text-content">...</span><span class="tag">&lt;/footer&gt;</span>
+    <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="value">"app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 2: Meta Tags & SEO ==================== -->
+    <div class="lesson fade-in" id="lesson2">
+      <div class="lesson-header">
+        <div class="lesson-number">2</div>
+        <h2 class="lesson-title">Meta Tags & SEO</h2>
+      </div>
+      <p class="lesson-desc">
+        Meta tags provide metadata about your HTML document. They're essential
+        for SEO, social media sharing, and controlling browser behavior.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;head&gt;</span>
+    <span class="comment">&lt;!-- Essential Meta Tags --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"viewport"</span> <span class="attr">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"description"</span> <span class="attr">content</span>=<span class="value">"Learn HTML from scratch"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"keywords"</span> <span class="attr">content</span>=<span class="value">"HTML, tutorial, web development"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"author"</span> <span class="attr">content</span>=<span class="value">"John Doe"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Open Graph (Facebook/LinkedIn) --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="value">"og:title"</span> <span class="attr">content</span>=<span class="value">"HTML Crash Course"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="value">"og:description"</span> <span class="attr">content</span>=<span class="value">"Complete HTML guide"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="value">"og:image"</span> <span class="attr">content</span>=<span class="value">"preview.jpg"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="value">"og:type"</span> <span class="attr">content</span>=<span class="value">"website"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Twitter Card --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"twitter:card"</span> <span class="attr">content</span>=<span class="value">"summary_large_image"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"twitter:title"</span> <span class="attr">content</span>=<span class="value">"HTML Crash Course"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Favicon --&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="value">"icon"</span> <span class="attr">type</span>=<span class="value">"image/png"</span> <span class="attr">href</span>=<span class="value">"favicon.png"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;title&gt;</span><span class="text-content">My Page Title | Brand Name</span><span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>SEO optimization for Google rankings</li>
+          <li>Social media preview cards (Facebook, Twitter, LinkedIn)</li>
+          <li>Mobile responsive design with viewport meta</li>
+          <li>Browser tab icons with favicon</li>
+          <li>Character encoding for international content</li>
+          <li>Page caching & refresh control</li>
+        </ul>
+      </div>
+
+      <div class="info-box warning">
+        <div class="info-title">⚠️ Important</div>
+        <p>
+          The <code class="inline">viewport</code> meta tag is crucial for
+          responsive design. Without it, mobile devices will render your page at
+          desktop width and scale it down.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 3: Headings & Paragraphs ==================== -->
+    <div class="lesson fade-in" id="lesson3">
+      <div class="lesson-header">
+        <div class="lesson-number">3</div>
+        <h2 class="lesson-title">Headings & Paragraphs</h2>
+      </div>
+      <p class="lesson-desc">
+        HTML provides six levels of headings (h1-h6) for document hierarchy and
+        paragraphs for body text. Proper heading structure is vital for SEO and
+        accessibility.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Heading Hierarchy (h1 = most important) --&gt;</span>
+<span class="tag">&lt;h1&gt;</span><span class="text-content">Main Page Title</span><span class="tag">&lt;/h1&gt;</span>          <span class="comment">&lt;!-- Only ONE per page --&gt;</span>
+<span class="tag">&lt;h2&gt;</span><span class="text-content">Section Title</span><span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span><span class="text-content">Sub-section Title</span><span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h4&gt;</span><span class="text-content">Sub-sub-section</span><span class="tag">&lt;/h4&gt;</span>
+<span class="tag">&lt;h5&gt;</span><span class="text-content">Minor Heading</span><span class="tag">&lt;/h5&gt;</span>
+<span class="tag">&lt;h6&gt;</span><span class="text-content">Smallest Heading</span><span class="tag">&lt;/h6&gt;</span>
+
+<span class="comment">&lt;!-- Paragraphs --&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="text-content">This is a paragraph. Browsers automatically add
+spacing before and after paragraphs.</span><span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;p&gt;</span><span class="text-content">This is another paragraph with a
+<span class="tag">&lt;br&gt;</span>line break inside it.</span><span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- Horizontal Rule (thematic break) --&gt;</span>
+<span class="tag">&lt;hr&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Blog Post Structure
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;article&gt;</span>
+    <span class="tag">&lt;h1&gt;</span><span class="text-content">Complete Guide to Indoor Plants</span><span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Indoor plants can transform your living space...</span><span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">Choosing the Right Plant</span><span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Consider light conditions in your home...</span><span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h3&gt;</span><span class="text-content">Low Light Plants</span><span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Snake plants and pothos thrive in low light...</span><span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h3&gt;</span><span class="text-content">Bright Light Plants</span><span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Succulents and cacti need direct sunlight...</span><span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">Watering Schedule</span><span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Overwatering is the #1 killer of houseplants...</span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/article&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box danger">
+        <div class="info-title">🚫 Common Mistakes</div>
+        <p>
+          Don't skip heading levels (e.g., h1 → h3). Don't use headings just for
+          styling — use CSS instead. Always have exactly one
+          <code class="inline">&lt;h1&gt;</code> per page for SEO.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 4: Text Formatting ==================== -->
+    <div class="lesson fade-in" id="lesson4">
+      <div class="lesson-header">
+        <div class="lesson-number">4</div>
+        <h2 class="lesson-title">Text Formatting</h2>
+      </div>
+      <p class="lesson-desc">
+        HTML provides semantic and presentational elements for formatting text
+        content with meaning and emphasis.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Semantic (meaningful) elements --&gt;</span>
+<span class="tag">&lt;strong&gt;</span><span class="text-content">Important text</span><span class="tag">&lt;/strong&gt;</span>        <span class="comment">&lt;!-- Bold + semantic importance --&gt;</span>
+<span class="tag">&lt;em&gt;</span><span class="text-content">Emphasized text</span><span class="tag">&lt;/em&gt;</span>            <span class="comment">&lt;!-- Italic + stress emphasis --&gt;</span>
+<span class="tag">&lt;mark&gt;</span><span class="text-content">Highlighted text</span><span class="tag">&lt;/mark&gt;</span>        <span class="comment">&lt;!-- Yellow highlight --&gt;</span>
+<span class="tag">&lt;del&gt;</span><span class="text-content">Deleted text</span><span class="tag">&lt;/del&gt;</span>             <span class="comment">&lt;!-- Strikethrough --&gt;</span>
+<span class="tag">&lt;ins&gt;</span><span class="text-content">Inserted text</span><span class="tag">&lt;/ins&gt;</span>           <span class="comment">&lt;!-- Underlined (added text) --&gt;</span>
+<span class="tag">&lt;small&gt;</span><span class="text-content">Small print</span><span class="tag">&lt;/small&gt;</span>          <span class="comment">&lt;!-- Fine print, disclaimers --&gt;</span>
+<span class="tag">&lt;sub&gt;</span><span class="text-content">Subscript</span><span class="tag">&lt;/sub&gt;</span>                <span class="comment">&lt;!-- H₂O --&gt;</span>
+<span class="tag">&lt;sup&gt;</span><span class="text-content">Superscript</span><span class="tag">&lt;/sup&gt;</span>              <span class="comment">&lt;!-- x² --&gt;</span>
+
+<span class="comment">&lt;!-- Code & Preformatted --&gt;</span>
+<span class="tag">&lt;code&gt;</span><span class="text-content">console.log("hello")</span><span class="tag">&lt;/code&gt;</span>   <span class="comment">&lt;!-- Inline code --&gt;</span>
+<span class="tag">&lt;pre&gt;</span><span class="text-content">Preformatted    text</span><span class="tag">&lt;/pre&gt;</span>    <span class="comment">&lt;!-- Preserves whitespace --&gt;</span>
+<span class="tag">&lt;kbd&gt;</span><span class="text-content">Ctrl + C</span><span class="tag">&lt;/kbd&gt;</span>                <span class="comment">&lt;!-- Keyboard input --&gt;</span>
+<span class="tag">&lt;samp&gt;</span><span class="text-content">Output text</span><span class="tag">&lt;/samp&gt;</span>           <span class="comment">&lt;!-- Sample output --&gt;</span>
+<span class="tag">&lt;var&gt;</span><span class="text-content">x</span><span class="tag">&lt;/var&gt;</span>                       <span class="comment">&lt;!-- Variable --&gt;</span>
+
+<span class="comment">&lt;!-- Quotations --&gt;</span>
+<span class="tag">&lt;blockquote</span> <span class="attr">cite</span>=<span class="value">"https://example.com"</span><span class="tag">&gt;</span>
+    <span class="text-content">The only way to do great work is to love what you do.</span>
+<span class="tag">&lt;/blockquote&gt;</span>
+<span class="tag">&lt;q&gt;</span><span class="text-content">Inline quotation</span><span class="tag">&lt;/q&gt;</span>
+<span class="tag">&lt;cite&gt;</span><span class="text-content">Book Title</span><span class="tag">&lt;/cite&gt;</span>
+<span class="tag">&lt;abbr</span> <span class="attr">title</span>=<span class="value">"HyperText Markup Language"</span><span class="tag">&gt;</span><span class="text-content">HTML</span><span class="tag">&lt;/abbr&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="element-grid">
+        <div class="element-card">
+          <div class="element-tag">&lt;strong&gt;</div>
+          <div class="element-desc">Important / bold text</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;em&gt;</div>
+          <div class="element-desc">Emphasized / italic text</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;mark&gt;</div>
+          <div class="element-desc">Highlighted text</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;code&gt;</div>
+          <div class="element-desc">Code snippet</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;blockquote&gt;</div>
+          <div class="element-desc">Block quotation</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;abbr&gt;</div>
+          <div class="element-desc">Abbreviation with tooltip</div>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Product Description
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"product-info"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">Premium Wireless Headphones</span><span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+        <span class="tag">&lt;strong&gt;</span><span class="text-content">Now only $79.99!</span><span class="tag">&lt;/strong&gt;</span>
+        <span class="tag">&lt;del&gt;</span><span class="text-content">$129.99</span><span class="tag">&lt;/del&gt;</span>
+        <span class="tag">&lt;mark&gt;</span><span class="text-content">38% OFF</span><span class="tag">&lt;/mark&gt;</span>
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+        <span class="text-content">Experience </span><span class="tag">&lt;em&gt;</span><span class="text-content">crystal-clear audio</span><span class="tag">&lt;/em&gt;</span><span class="text-content"> with
+        active noise cancellation.</span>
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;small&gt;</span><span class="text-content">*Free shipping on orders over $50</span><span class="tag">&lt;/small&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 5: Links & Navigation ==================== -->
+    <div class="lesson fade-in" id="lesson5">
+      <div class="lesson-header">
+        <div class="lesson-number">5</div>
+        <h2 class="lesson-title">Links & Navigation</h2>
+      </div>
+      <p class="lesson-desc">
+        The anchor tag <code class="inline">&lt;a&gt;</code> is the backbone of
+        the web, creating hyperlinks between pages, sections, files, and
+        external resources.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Basic Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"https://google.com"</span><span class="tag">&gt;</span><span class="text-content">Visit Google</span><span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Open in New Tab --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"https://google.com"</span> <span class="attr">target</span>=<span class="value">"_blank"</span> <span class="attr">rel</span>=<span class="value">"noopener noreferrer"</span><span class="tag">&gt;</span>
+    <span class="text-content">Google (new tab)</span>
+<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Internal Page Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"about.html"</span><span class="tag">&gt;</span><span class="text-content">About Us</span><span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"/products/shoes.html"</span><span class="tag">&gt;</span><span class="text-content">Shoes</span><span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Anchor / Jump Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"#contact"</span><span class="tag">&gt;</span><span class="text-content">Jump to Contact</span><span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;section</span> <span class="attr">id</span>=<span class="value">"contact"</span><span class="tag">&gt;</span><span class="text-content">...</span><span class="tag">&lt;/section&gt;</span>
+
+<span class="comment">&lt;!-- Email Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"mailto:hello@example.com"</span><span class="tag">&gt;</span><span class="text-content">Email Us</span><span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Phone Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"tel:+1234567890"</span><span class="tag">&gt;</span><span class="text-content">Call Us</span><span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Download Link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"resume.pdf"</span> <span class="attr">download</span><span class="tag">&gt;</span><span class="text-content">Download Resume</span><span class="tag">&lt;/a&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Website Navigation Bar
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;nav</span> <span class="attr">aria-label</span>=<span class="value">"Main navigation"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span> <span class="attr">class</span>=<span class="value">"logo"</span><span class="tag">&gt;</span><span class="text-content">MyBrand</span><span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;ul&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span><span class="tag">&gt;</span><span class="text-content">Home</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/products"</span><span class="tag">&gt;</span><span class="text-content">Products</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/about"</span><span class="tag">&gt;</span><span class="text-content">About</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/contact"</span><span class="tag">&gt;</span><span class="text-content">Contact</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"tel:+18005551234"</span><span class="tag">&gt;</span><span class="text-content">📞 Call Now</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/nav&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box success">
+        <div class="info-title">✅ Best Practice</div>
+        <p>
+          Always add <code class="inline">rel="noopener noreferrer"</code> to
+          links with <code class="inline">target="_blank"</code> to prevent
+          security vulnerabilities (reverse tabnapping).
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 6: Images & Figures ==================== -->
+    <div class="lesson fade-in" id="lesson6">
+      <div class="lesson-header">
+        <div class="lesson-number">6</div>
+        <h2 class="lesson-title">Images & Figures</h2>
+      </div>
+      <p class="lesson-desc">
+        Images make the web visual. HTML provides multiple ways to display
+        images responsively with proper semantics.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Basic Image (self-closing tag) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"photo.jpg"</span>
+     <span class="attr">alt</span>=<span class="value">"A golden retriever playing in a park"</span>
+     <span class="attr">width</span>=<span class="value">"600"</span>
+     <span class="attr">height</span>=<span class="value">"400"</span><span class="tag">&gt;</span>
+
+<span class="comment">&lt;!-- Figure with Caption --&gt;</span>
+<span class="tag">&lt;figure&gt;</span>
+    <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"chart.png"</span> <span class="attr">alt</span>=<span class="value">"Q4 Sales growth chart"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;figcaption&gt;</span><span class="text-content">Figure 1: Q4 2024 Sales Performance</span><span class="tag">&lt;/figcaption&gt;</span>
+<span class="tag">&lt;/figure&gt;</span>
+
+<span class="comment">&lt;!-- Responsive Image with &lt;picture&gt; --&gt;</span>
+<span class="tag">&lt;picture&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">media</span>=<span class="value">"(min-width: 1200px)"</span> <span class="attr">srcset</span>=<span class="value">"hero-large.webp"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">media</span>=<span class="value">"(min-width: 768px)"</span> <span class="attr">srcset</span>=<span class="value">"hero-medium.webp"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"hero-small.jpg"</span> <span class="attr">alt</span>=<span class="value">"Hero banner"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/picture&gt;</span>
+
+<span class="comment">&lt;!-- Lazy Loading (performance) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"photo.jpg"</span> <span class="attr">alt</span>=<span class="value">"Description"</span> <span class="attr">loading</span>=<span class="value">"lazy"</span><span class="tag">&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>Product photos on e-commerce sites</li>
+          <li>Blog post featured images</li>
+          <li>Portfolio galleries and photo grids</li>
+          <li>Data visualization charts with captions</li>
+          <li>Responsive hero banners (different sizes per device)</li>
+          <li>Lazy-loaded image feeds for performance</li>
+        </ul>
+      </div>
+
+      <div class="info-box danger">
+        <div class="info-title">🚫 Never Skip Alt Text!</div>
+        <p>
+          The <code class="inline">alt</code> attribute is essential for
+          accessibility (screen readers), SEO, and as fallback when images fail
+          to load. Use descriptive, meaningful text.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 7: Lists ==================== -->
+    <div class="lesson fade-in" id="lesson7">
+      <div class="lesson-header">
+        <div class="lesson-number">7</div>
+        <h2 class="lesson-title">Lists</h2>
+      </div>
+      <p class="lesson-desc">
+        Lists organize content into structured formats. HTML offers ordered,
+        unordered, and description lists.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Unordered List (bullet points) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">HTML</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">CSS</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">JavaScript</span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="comment">&lt;!-- Ordered List (numbered) --&gt;</span>
+<span class="tag">&lt;ol&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Preheat oven to 350°F</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Mix dry ingredients</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Add wet ingredients</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Bake for 25 minutes</span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="comment">&lt;!-- Custom Start Number --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">start</span>=<span class="value">"5"</span> <span class="attr">type</span>=<span class="value">"A"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Item E</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Item F</span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="comment">&lt;!-- Nested List --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Frontend</span>
+        <span class="tag">&lt;ul&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="text-content">React</span><span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="text-content">Vue</span><span class="tag">&lt;/li&gt;</span>
+        <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;</span><span class="text-content">Backend</span>
+        <span class="tag">&lt;ul&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="text-content">Node.js</span><span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="text-content">Python</span><span class="tag">&lt;/li&gt;</span>
+        <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="comment">&lt;!-- Description List (key-value pairs) --&gt;</span>
+<span class="tag">&lt;dl&gt;</span>
+    <span class="tag">&lt;dt&gt;</span><span class="text-content">HTML</span><span class="tag">&lt;/dt&gt;</span>
+    <span class="tag">&lt;dd&gt;</span><span class="text-content">HyperText Markup Language — the structure of web pages.</span><span class="tag">&lt;/dd&gt;</span>
+    <span class="tag">&lt;dt&gt;</span><span class="text-content">CSS</span><span class="tag">&lt;/dt&gt;</span>
+    <span class="tag">&lt;dd&gt;</span><span class="text-content">Cascading Style Sheets — the presentation layer.</span><span class="tag">&lt;/dd&gt;</span>
+<span class="tag">&lt;/dl&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Restaurant Menu
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;section</span> <span class="attr">class</span>=<span class="value">"menu"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">🍕 Pizza Menu</span><span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;dl&gt;</span>
+        <span class="tag">&lt;dt&gt;</span><span class="text-content">Margherita — $12.99</span><span class="tag">&lt;/dt&gt;</span>
+        <span class="tag">&lt;dd&gt;</span><span class="text-content">Fresh mozzarella, tomato sauce, basil</span><span class="tag">&lt;/dd&gt;</span>
+
+        <span class="tag">&lt;dt&gt;</span><span class="text-content">Pepperoni — $14.99</span><span class="tag">&lt;/dt&gt;</span>
+        <span class="tag">&lt;dd&gt;</span><span class="text-content">Classic pepperoni, mozzarella, marinara</span><span class="tag">&lt;/dd&gt;</span>
+
+        <span class="tag">&lt;dt&gt;</span><span class="text-content">Supreme — $16.99</span><span class="tag">&lt;/dt&gt;</span>
+        <span class="tag">&lt;dd&gt;</span><span class="text-content">Pepperoni, sausage, peppers, onions, mushrooms</span><span class="tag">&lt;/dd&gt;</span>
+    <span class="tag">&lt;/dl&gt;</span>
+<span class="tag">&lt;/section&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 8: Tables ==================== -->
+    <div class="lesson fade-in" id="lesson8">
+      <div class="lesson-header">
+        <div class="lesson-number">8</div>
+        <h2 class="lesson-title">Tables</h2>
+      </div>
+      <p class="lesson-desc">
+        Tables display data in rows and columns. Use them only for tabular data
+        — never for page layout.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;caption&gt;</span><span class="text-content">Monthly Sales Report</span><span class="tag">&lt;/caption&gt;</span>
+    <span class="tag">&lt;thead&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span><span class="text-content">Month</span><span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;th&gt;</span><span class="text-content">Revenue</span><span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;th&gt;</span><span class="text-content">Expenses</span><span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;th&gt;</span><span class="text-content">Profit</span><span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/thead&gt;</span>
+    <span class="tag">&lt;tbody&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">January</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$45,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$32,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$13,000</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">February</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$52,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$35,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$17,000</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/tbody&gt;</span>
+    <span class="tag">&lt;tfoot&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">Total</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$97,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$67,000</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="text-content">$30,000</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/tfoot&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+
+<span class="comment">&lt;!-- Spanning cells --&gt;</span>
+<span class="tag">&lt;td</span> <span class="attr">colspan</span>=<span class="value">"2"</span><span class="tag">&gt;</span><span class="text-content">Spans 2 columns</span><span class="tag">&lt;/td&gt;</span>
+<span class="tag">&lt;td</span> <span class="attr">rowspan</span>=<span class="value">"3"</span><span class="tag">&gt;</span><span class="text-content">Spans 3 rows</span><span class="tag">&lt;/td&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>Financial reports and spreadsheets</li>
+          <li>Pricing comparison tables</li>
+          <li>Sports scores and statistics</li>
+          <li>Schedule/timetable displays</li>
+          <li>Product feature comparisons</li>
+          <li>Data dashboards</li>
+        </ul>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Element</th>
+            <th>Purpose</th>
+            <th>Required?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>&lt;table&gt;</code></td>
+            <td>Table container</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td><code>&lt;thead&gt;</code></td>
+            <td>Header group</td>
+            <td>Recommended</td>
+          </tr>
+          <tr>
+            <td><code>&lt;tbody&gt;</code></td>
+            <td>Body group</td>
+            <td>Recommended</td>
+          </tr>
+          <tr>
+            <td><code>&lt;tfoot&gt;</code></td>
+            <td>Footer group (totals)</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td><code>&lt;tr&gt;</code></td>
+            <td>Table row</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td><code>&lt;th&gt;</code></td>
+            <td>Header cell (bold, centered)</td>
+            <td>Recommended</td>
+          </tr>
+          <tr>
+            <td><code>&lt;td&gt;</code></td>
+            <td>Data cell</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td><code>&lt;caption&gt;</code></td>
+            <td>Table title/description</td>
+            <td>Recommended</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== LESSON 9: Forms Basics ==================== -->
+    <div class="lesson fade-in" id="lesson9">
+      <div class="lesson-header">
+        <div class="lesson-number">9</div>
+        <h2 class="lesson-title">Forms — Basics</h2>
+      </div>
+      <p class="lesson-desc">
+        Forms collect user input. They're used everywhere — login pages, search
+        bars, checkout processes, surveys, and more.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="value">"/submit"</span> <span class="attr">method</span>=<span class="value">"POST"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Text Input --&gt;</span>
+    <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"name"</span><span class="tag">&gt;</span><span class="text-content">Full Name:</span><span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">id</span>=<span class="value">"name"</span> <span class="attr">name</span>=<span class="value">"name"</span>
+           <span class="attr">placeholder</span>=<span class="value">"John Doe"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Email Input --&gt;</span>
+    <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"email"</span><span class="tag">&gt;</span><span class="text-content">Email:</span><span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"email"</span> <span class="attr">id</span>=<span class="value">"email"</span> <span class="attr">name</span>=<span class="value">"email"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Password --&gt;</span>
+    <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"pass"</span><span class="tag">&gt;</span><span class="text-content">Password:</span><span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"password"</span> <span class="attr">id</span>=<span class="value">"pass"</span> <span class="attr">name</span>=<span class="value">"password"</span>
+           <span class="attr">minlength</span>=<span class="value">"8"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Number --&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"number"</span> <span class="attr">min</span>=<span class="value">"1"</span> <span class="attr">max</span>=<span class="value">"100"</span> <span class="attr">step</span>=<span class="value">"1"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Date --&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"date"</span> <span class="attr">name</span>=<span class="value">"birthday"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Color Picker --&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"color"</span> <span class="attr">value</span>=<span class="value">"#6c5ce7"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Range Slider --&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"range"</span> <span class="attr">min</span>=<span class="value">"0"</span> <span class="attr">max</span>=<span class="value">"100"</span> <span class="attr">value</span>=<span class="value">"50"</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- File Upload --&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"file"</span> <span class="attr">accept</span>=<span class="value">"image/*"</span> <span class="attr">multiple</span><span class="tag">&gt;</span>
+
+    <span class="comment">&lt;!-- Checkbox --&gt;</span>
+    <span class="tag">&lt;label&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"checkbox"</span> <span class="attr">name</span>=<span class="value">"agree"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+        <span class="text-content">I agree to Terms & Conditions</span>
+    <span class="tag">&lt;/label&gt;</span>
+
+    <span class="comment">&lt;!-- Radio Buttons --&gt;</span>
+    <span class="tag">&lt;fieldset&gt;</span>
+        <span class="tag">&lt;legend&gt;</span><span class="text-content">Gender:</span><span class="tag">&lt;/legend&gt;</span>
+        <span class="tag">&lt;label&gt;&lt;input</span> <span class="attr">type</span>=<span class="value">"radio"</span> <span class="attr">name</span>=<span class="value">"gender"</span> <span class="attr">value</span>=<span class="value">"male"</span><span class="tag">&gt;</span> <span class="text-content">Male</span><span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;label&gt;&lt;input</span> <span class="attr">type</span>=<span class="value">"radio"</span> <span class="attr">name</span>=<span class="value">"gender"</span> <span class="attr">value</span>=<span class="value">"female"</span><span class="tag">&gt;</span> <span class="text-content">Female</span><span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;/fieldset&gt;</span>
+
+    <span class="comment">&lt;!-- Submit Button --&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span><span class="text-content">Register</span><span class="tag">&lt;/button&gt;</span>
+
+<span class="tag">&lt;/form&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">🌍 Real-World Example: Login Form</div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="value">"/api/login"</span> <span class="attr">method</span>=<span class="value">"POST"</span> <span class="attr">class</span>=<span class="value">"login-form"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">Welcome Back 👋</span><span class="tag">&lt;/h2&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"login-email"</span><span class="tag">&gt;</span><span class="text-content">Email Address</span><span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"email"</span> <span class="attr">id</span>=<span class="value">"login-email"</span>
+               <span class="attr">name</span>=<span class="value">"email"</span> <span class="attr">placeholder</span>=<span class="value">"you@example.com"</span>
+               <span class="attr">autocomplete</span>=<span class="value">"email"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"login-pass"</span><span class="tag">&gt;</span><span class="text-content">Password</span><span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"password"</span> <span class="attr">id</span>=<span class="value">"login-pass"</span>
+               <span class="attr">name</span>=<span class="value">"password"</span> <span class="attr">minlength</span>=<span class="value">"8"</span>
+               <span class="attr">autocomplete</span>=<span class="value">"current-password"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="tag">&lt;label</span> <span class="attr">class</span>=<span class="value">"remember"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"checkbox"</span> <span class="attr">name</span>=<span class="value">"remember"</span><span class="tag">&gt;</span> <span class="text-content">Remember me</span>
+    <span class="tag">&lt;/label&gt;</span>
+
+    <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span><span class="text-content">Sign In</span><span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"/forgot-password"</span><span class="tag">&gt;</span><span class="text-content">Forgot password?</span><span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box success">
+        <div class="info-title">✅ Best Practice</div>
+        <p>
+          Always pair <code class="inline">&lt;label&gt;</code> with
+          <code class="inline">&lt;input&gt;</code> using the
+          <code class="inline">for</code>/<code class="inline">id</code>
+          connection. This improves accessibility and creates a larger click
+          target.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 10: Forms Advanced ==================== -->
+    <div class="lesson fade-in" id="lesson10">
+      <div class="lesson-header">
+        <div class="lesson-number">10</div>
+        <h2 class="lesson-title">Forms — Advanced</h2>
+      </div>
+      <p class="lesson-desc">
+        Advanced form elements include dropdowns, textareas, autocomplete lists,
+        and HTML5 validation attributes.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Select Dropdown --&gt;</span>
+<span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"country"</span><span class="tag">&gt;</span><span class="text-content">Country:</span><span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"country"</span> <span class="attr">name</span>=<span class="value">"country"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">""</span> <span class="attr">disabled</span> <span class="attr">selected</span><span class="tag">&gt;</span><span class="text-content">Choose a country</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;optgroup</span> <span class="attr">label</span>=<span class="value">"North America"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"us"</span><span class="tag">&gt;</span><span class="text-content">United States</span><span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"ca"</span><span class="tag">&gt;</span><span class="text-content">Canada</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;/optgroup&gt;</span>
+    <span class="tag">&lt;optgroup</span> <span class="attr">label</span>=<span class="value">"Europe"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"uk"</span><span class="tag">&gt;</span><span class="text-content">United Kingdom</span><span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"de"</span><span class="tag">&gt;</span><span class="text-content">Germany</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;/optgroup&gt;</span>
+<span class="tag">&lt;/select&gt;</span>
+
+<span class="comment">&lt;!-- Textarea --&gt;</span>
+<span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"message"</span><span class="tag">&gt;</span><span class="text-content">Message:</span><span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;textarea</span> <span class="attr">id</span>=<span class="value">"message"</span> <span class="attr">name</span>=<span class="value">"message"</span>
+          <span class="attr">rows</span>=<span class="value">"5"</span> <span class="attr">cols</span>=<span class="value">"40"</span>
+          <span class="attr">maxlength</span>=<span class="value">"500"</span>
+          <span class="attr">placeholder</span>=<span class="value">"Type your message..."</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+
+<span class="comment">&lt;!-- Datalist (Autocomplete) --&gt;</span>
+<span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"browser"</span><span class="tag">&gt;</span><span class="text-content">Browser:</span><span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">list</span>=<span class="value">"browsers"</span> <span class="attr">id</span>=<span class="value">"browser"</span> <span class="attr">name</span>=<span class="value">"browser"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;datalist</span> <span class="attr">id</span>=<span class="value">"browsers"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"Chrome"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"Firefox"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"Safari"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"Edge"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/datalist&gt;</span>
+
+<span class="comment">&lt;!-- Progress & Meter --&gt;</span>
+<span class="tag">&lt;progress</span> <span class="attr">value</span>=<span class="value">"75"</span> <span class="attr">max</span>=<span class="value">"100"</span><span class="tag">&gt;</span><span class="text-content">75%</span><span class="tag">&lt;/progress&gt;</span>
+<span class="tag">&lt;meter</span> <span class="attr">value</span>=<span class="value">"0.7"</span> <span class="attr">min</span>=<span class="value">"0"</span> <span class="attr">max</span>=<span class="value">"1"</span> <span class="attr">low</span>=<span class="value">"0.3"</span> <span class="attr">high</span>=<span class="value">"0.8"</span><span class="tag">&gt;</span><span class="text-content">70%</span><span class="tag">&lt;/meter&gt;</span>
+
+<span class="comment">&lt;!-- Output (calculated result) --&gt;</span>
+<span class="tag">&lt;output</span> <span class="attr">name</span>=<span class="value">"result"</span><span class="tag">&gt;</span><span class="text-content">60</span><span class="tag">&lt;/output&gt;</span>
+
+<span class="comment">&lt;!-- HTML5 Validation Attributes --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">required</span><span class="tag">&gt;</span>                  <span class="comment">&lt;!-- Must fill --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">minlength</span>=<span class="value">"3"</span> <span class="attr">maxlength</span>=<span class="value">"20"</span><span class="tag">&gt;</span>  <span class="comment">&lt;!-- Length limits --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">pattern</span>=<span class="value">"[A-Za-z]{3,}"</span><span class="tag">&gt;</span>      <span class="comment">&lt;!-- Regex pattern --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"url"</span> <span class="attr">placeholder</span>=<span class="value">"https://..."</span><span class="tag">&gt;</span>   <span class="comment">&lt;!-- URL validation --&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Contact Us Form
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="value">"/api/contact"</span> <span class="attr">method</span>=<span class="value">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2&gt;</span><span class="text-content">Contact Us 💬</span><span class="tag">&lt;/h2&gt;</span>
+
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">name</span>=<span class="value">"name"</span> <span class="attr">placeholder</span>=<span class="value">"Your Name"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"email"</span> <span class="attr">name</span>=<span class="value">"email"</span> <span class="attr">placeholder</span>=<span class="value">"Email"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;select</span> <span class="attr">name</span>=<span class="value">"subject"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">""</span><span class="tag">&gt;</span><span class="text-content">Select Subject</span><span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"sales"</span><span class="tag">&gt;</span><span class="text-content">Sales Inquiry</span><span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"support"</span><span class="tag">&gt;</span><span class="text-content">Technical Support</span><span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="value">"feedback"</span><span class="tag">&gt;</span><span class="text-content">Feedback</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;/select&gt;</span>
+
+    <span class="tag">&lt;textarea</span> <span class="attr">name</span>=<span class="value">"message"</span> <span class="attr">rows</span>=<span class="value">"6"</span>
+              <span class="attr">placeholder</span>=<span class="value">"Your message..."</span> <span class="attr">required</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+
+    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"file"</span> <span class="attr">name</span>=<span class="value">"attachment"</span> <span class="attr">accept</span>=<span class="value">".pdf,.doc,.jpg"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span><span class="text-content">Send Message 📧</span><span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 11: Audio & Video ==================== -->
+    <div class="lesson fade-in" id="lesson11">
+      <div class="lesson-header">
+        <div class="lesson-number">11</div>
+        <h2 class="lesson-title">Audio & Video</h2>
+      </div>
+      <p class="lesson-desc">
+        HTML5 native audio and video elements let you embed media directly
+        without plugins like Flash.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Video Player --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">controls</span> <span class="attr">width</span>=<span class="value">"640"</span> <span class="attr">height</span>=<span class="value">"360"</span>
+       <span class="attr">poster</span>=<span class="value">"thumbnail.jpg"</span>
+       <span class="attr">preload</span>=<span class="value">"metadata"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="value">"video.mp4"</span> <span class="attr">type</span>=<span class="value">"video/mp4"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="value">"video.webm"</span> <span class="attr">type</span>=<span class="value">"video/webm"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;track</span> <span class="attr">src</span>=<span class="value">"captions.vtt"</span> <span class="attr">kind</span>=<span class="value">"subtitles"</span>
+           <span class="attr">srclang</span>=<span class="value">"en"</span> <span class="attr">label</span>=<span class="value">"English"</span> <span class="attr">default</span><span class="tag">&gt;</span>
+    <span class="text-content">Your browser doesn't support video.</span>
+<span class="tag">&lt;/video&gt;</span>
+
+<span class="comment">&lt;!-- Autoplay Muted (allowed by browsers) --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">autoplay</span> <span class="attr">muted</span> <span class="attr">loop</span> <span class="attr">playsinline</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="value">"background.mp4"</span> <span class="attr">type</span>=<span class="value">"video/mp4"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/video&gt;</span>
+
+<span class="comment">&lt;!-- Audio Player --&gt;</span>
+<span class="tag">&lt;audio</span> <span class="attr">controls</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="value">"song.mp3"</span> <span class="attr">type</span>=<span class="value">"audio/mpeg"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="value">"song.ogg"</span> <span class="attr">type</span>=<span class="value">"audio/ogg"</span><span class="tag">&gt;</span>
+    <span class="text-content">Your browser doesn't support audio.</span>
+<span class="tag">&lt;/audio&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>Video tutorials and courses</li>
+          <li>Background hero videos on landing pages</li>
+          <li>Podcast audio players</li>
+          <li>Music streaming previews</li>
+          <li>Product demo videos</li>
+          <li>Video testimonials</li>
+        </ul>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>controls</code></td>
+            <td>Shows play/pause, volume, timeline</td>
+          </tr>
+          <tr>
+            <td><code>autoplay</code></td>
+            <td>Auto-starts (needs <code>muted</code> for video)</td>
+          </tr>
+          <tr>
+            <td><code>muted</code></td>
+            <td>Starts muted</td>
+          </tr>
+          <tr>
+            <td><code>loop</code></td>
+            <td>Repeats when finished</td>
+          </tr>
+          <tr>
+            <td><code>poster</code></td>
+            <td>Thumbnail image before play</td>
+          </tr>
+          <tr>
+            <td><code>preload</code></td>
+            <td>none / metadata / auto</td>
+          </tr>
+          <tr>
+            <td><code>playsinline</code></td>
+            <td>Prevents fullscreen on iOS</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== LESSON 12: Semantic HTML ==================== -->
+    <div class="lesson fade-in" id="lesson12">
+      <div class="lesson-header">
+        <div class="lesson-number">12</div>
+        <h2 class="lesson-title">Semantic HTML</h2>
+      </div>
+      <p class="lesson-desc">
+        Semantic elements clearly describe their meaning to both browsers and
+        developers, improving accessibility, SEO, and code readability.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;body&gt;</span>
+    <span class="comment">&lt;!-- Site Header --&gt;</span>
+    <span class="tag">&lt;header&gt;</span>
+        <span class="tag">&lt;nav</span> <span class="attr">aria-label</span>=<span class="value">"Primary"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span><span class="tag">&gt;</span><span class="text-content">Logo</span><span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;ul&gt;</span>
+                <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span><span class="tag">&gt;</span><span class="text-content">Home</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/blog"</span><span class="tag">&gt;</span><span class="text-content">Blog</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/nav&gt;</span>
+    <span class="tag">&lt;/header&gt;</span>
+
+    <span class="comment">&lt;!-- Main Content --&gt;</span>
+    <span class="tag">&lt;main&gt;</span>
+        <span class="comment">&lt;!-- Article (self-contained) --&gt;</span>
+        <span class="tag">&lt;article&gt;</span>
+            <span class="tag">&lt;header&gt;</span>
+                <span class="tag">&lt;h1&gt;</span><span class="text-content">Blog Post Title</span><span class="tag">&lt;/h1&gt;</span>
+                <span class="tag">&lt;time</span> <span class="attr">datetime</span>=<span class="value">"2024-12-15"</span><span class="tag">&gt;</span><span class="text-content">Dec 15, 2024</span><span class="tag">&lt;/time&gt;</span>
+            <span class="tag">&lt;/header&gt;</span>
+
+            <span class="tag">&lt;section&gt;</span>
+                <span class="tag">&lt;h2&gt;</span><span class="text-content">Introduction</span><span class="tag">&lt;/h2&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="text-content">Article content here...</span><span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/section&gt;</span>
+
+            <span class="tag">&lt;section&gt;</span>
+                <span class="tag">&lt;h2&gt;</span><span class="text-content">Details</span><span class="tag">&lt;/h2&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="text-content">More content...</span><span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;figure&gt;</span>
+                    <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"chart.png"</span> <span class="attr">alt</span>=<span class="value">"Data chart"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;figcaption&gt;</span><span class="text-content">Fig 1: Results</span><span class="tag">&lt;/figcaption&gt;</span>
+                <span class="tag">&lt;/figure&gt;</span>
+            <span class="tag">&lt;/section&gt;</span>
+        <span class="tag">&lt;/article&gt;</span>
+
+        <span class="comment">&lt;!-- Sidebar --&gt;</span>
+        <span class="tag">&lt;aside&gt;</span>
+            <span class="tag">&lt;h3&gt;</span><span class="text-content">Related Posts</span><span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;ul&gt;</span><span class="text-content">...</span><span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/aside&gt;</span>
+    <span class="tag">&lt;/main&gt;</span>
+
+    <span class="comment">&lt;!-- Site Footer --&gt;</span>
+    <span class="tag">&lt;footer&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">&copy; 2024 MyBrand. All rights reserved.</span><span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;address&gt;</span>
+            <span class="text-content">Contact: </span><span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"mailto:hi@example.com"</span><span class="tag">&gt;</span><span class="text-content">hi@example.com</span><span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/address&gt;</span>
+    <span class="tag">&lt;/footer&gt;</span>
+<span class="tag">&lt;/body&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="element-grid">
+        <div class="element-card">
+          <div class="element-tag">&lt;header&gt;</div>
+          <div class="element-desc">Intro content / navigation</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;nav&gt;</div>
+          <div class="element-desc">Navigation links</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;main&gt;</div>
+          <div class="element-desc">Main unique content</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;article&gt;</div>
+          <div class="element-desc">Self-contained content</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;section&gt;</div>
+          <div class="element-desc">Thematic grouping</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;aside&gt;</div>
+          <div class="element-desc">Sidebar / tangential</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;footer&gt;</div>
+          <div class="element-desc">Footer / closing info</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;figure&gt;</div>
+          <div class="element-desc">Self-contained media</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;time&gt;</div>
+          <div class="element-desc">Date / time value</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;address&gt;</div>
+          <div class="element-desc">Contact information</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;details&gt;</div>
+          <div class="element-desc">Collapsible content</div>
+        </div>
+        <div class="element-card">
+          <div class="element-tag">&lt;summary&gt;</div>
+          <div class="element-desc">Details toggle label</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">💡 Why Semantic HTML Matters</div>
+        <p>
+          <strong>SEO:</strong> Search engines better understand your content.
+          <strong>Accessibility:</strong> Screen readers can navigate by
+          landmarks. <strong>Maintainability:</strong> Code is more readable and
+          organized.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 13: Div & Span ==================== -->
+    <div class="lesson fade-in" id="lesson13">
+      <div class="lesson-header">
+        <div class="lesson-number">13</div>
+        <h2 class="lesson-title">Div & Span (Generic Containers)</h2>
+      </div>
+      <p class="lesson-desc">
+        <code class="inline">&lt;div&gt;</code> and
+        <code class="inline">&lt;span&gt;</code> are generic containers with no
+        semantic meaning. Use them when no semantic element fits.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- &lt;div&gt; = Block-level container --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"card"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"card-header"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;h3&gt;</span><span class="text-content">Product Name</span><span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"card-body"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">Description here...</span><span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"card-footer"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button&gt;</span><span class="text-content">Buy Now</span><span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- &lt;span&gt; = Inline container --&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+    <span class="text-content">Your order total is </span>
+    <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="value">"price"</span><span class="tag">&gt;</span><span class="text-content">$49.99</span><span class="tag">&lt;/span&gt;</span>
+    <span class="text-content"> including </span>
+    <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="value">"highlight"</span><span class="tag">&gt;</span><span class="text-content">free shipping</span><span class="tag">&lt;/span&gt;</span><span class="text-content">.</span>
+<span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- Layout wrapper --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"container"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"row"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"col-6"</span><span class="tag">&gt;</span><span class="text-content">Left Column</span><span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"col-6"</span><span class="tag">&gt;</span><span class="text-content">Right Column</span><span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th><code>&lt;div&gt;</code></th>
+            <th><code>&lt;span&gt;</code></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Display Type</td>
+            <td>Block-level</td>
+            <td>Inline</td>
+          </tr>
+          <tr>
+            <td>Starts New Line?</td>
+            <td>✅ Yes</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Width</td>
+            <td>Full width</td>
+            <td>Content width</td>
+          </tr>
+          <tr>
+            <td>Common Use</td>
+            <td>Layout sections</td>
+            <td>Styling text parts</td>
+          </tr>
+          <tr>
+            <td>Semantic?</td>
+            <td>❌ No meaning</td>
+            <td>❌ No meaning</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== LESSON 14: iFrame & Embed ==================== -->
+    <div class="lesson fade-in" id="lesson14">
+      <div class="lesson-header">
+        <div class="lesson-number">14</div>
+        <h2 class="lesson-title">iFrame & Embed</h2>
+      </div>
+      <p class="lesson-desc">
+        iFrames embed external content like maps, videos, and other websites
+        directly into your page.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- Embed YouTube Video --&gt;</span>
+<span class="tag">&lt;iframe</span>
+    <span class="attr">width</span>=<span class="value">"560"</span>
+    <span class="attr">height</span>=<span class="value">"315"</span>
+    <span class="attr">src</span>=<span class="value">"https://www.youtube.com/embed/dQw4w9WgXcQ"</span>
+    <span class="attr">title</span>=<span class="value">"YouTube video player"</span>
+    <span class="attr">frameborder</span>=<span class="value">"0"</span>
+    <span class="attr">allow</span>=<span class="value">"accelerometer; autoplay; encrypted-media"</span>
+    <span class="attr">allowfullscreen</span>
+    <span class="attr">loading</span>=<span class="value">"lazy"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/iframe&gt;</span>
+
+<span class="comment">&lt;!-- Embed Google Map --&gt;</span>
+<span class="tag">&lt;iframe</span>
+    <span class="attr">src</span>=<span class="value">"https://maps.google.com/maps?q=NYC&output=embed"</span>
+    <span class="attr">width</span>=<span class="value">"600"</span>
+    <span class="attr">height</span>=<span class="value">"450"</span>
+    <span class="attr">style</span>=<span class="value">"border:0"</span>
+    <span class="attr">allowfullscreen</span>
+    <span class="attr">loading</span>=<span class="value">"lazy"</span>
+    <span class="attr">title</span>=<span class="value">"Google Map"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/iframe&gt;</span>
+
+<span class="comment">&lt;!-- Security: Sandbox attribute --&gt;</span>
+<span class="tag">&lt;iframe</span>
+    <span class="attr">src</span>=<span class="value">"https://external-site.com"</span>
+    <span class="attr">sandbox</span>=<span class="value">"allow-scripts allow-same-origin"</span>
+    <span class="attr">title</span>=<span class="value">"External content"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/iframe&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <div class="use-case-title">🎯 Use Cases</div>
+        <ul class="use-case-list">
+          <li>YouTube / Vimeo video embeds</li>
+          <li>Google Maps on contact pages</li>
+          <li>Spotify / SoundCloud music players</li>
+          <li>Social media post embeds</li>
+          <li>Code editors (CodePen, JSFiddle)</li>
+          <li>Payment forms (Stripe, PayPal)</li>
+        </ul>
+      </div>
+
+      <div class="info-box warning">
+        <div class="info-title">⚠️ Security Warning</div>
+        <p>
+          Always use the <code class="inline">sandbox</code> attribute for
+          iFrames loading untrusted content. Never embed unknown URLs without
+          restrictions.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON 15: Accessibility ==================== -->
+    <div class="lesson fade-in" id="lesson15">
+      <div class="lesson-header">
+        <div class="lesson-number">15</div>
+        <h2 class="lesson-title">Accessibility & Best Practices</h2>
+      </div>
+      <p class="lesson-desc">
+        Writing accessible HTML ensures your website can be used by everyone,
+        including people using screen readers, keyboard navigation, and
+        assistive technologies.
+      </p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="comment">&lt;!-- 1. Always use alt text for images --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"logo.png"</span> <span class="attr">alt</span>=<span class="value">"Acme Corp logo"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"divider.png"</span> <span class="attr">alt</span>=<span class="value">""</span> <span class="attr">role</span>=<span class="value">"presentation"</span><span class="tag">&gt;</span>  <span class="comment">&lt;!-- decorative --&gt;</span>
+
+<span class="comment">&lt;!-- 2. Label all form inputs --&gt;</span>
+<span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"search"</span><span class="tag">&gt;</span><span class="text-content">Search:</span><span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"search"</span> <span class="attr">id</span>=<span class="value">"search"</span> <span class="attr">aria-label</span>=<span class="value">"Search site"</span><span class="tag">&gt;</span>
+
+<span class="comment">&lt;!-- 3. ARIA landmarks & roles --&gt;</span>
+<span class="tag">&lt;nav</span> <span class="attr">aria-label</span>=<span class="value">"Main navigation"</span><span class="tag">&gt;</span><span class="text-content">...</span><span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;main</span> <span class="attr">role</span>=<span class="value">"main"</span><span class="tag">&gt;</span><span class="text-content">...</span><span class="tag">&lt;/main&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">aria-expanded</span>=<span class="value">"false"</span> <span class="attr">aria-controls</span>=<span class="value">"menu"</span><span class="tag">&gt;</span><span class="text-content">☰</span><span class="tag">&lt;/button&gt;</span>
+
+<span class="comment">&lt;!-- 4. Skip navigation link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"#main-content"</span> <span class="attr">class</span>=<span class="value">"skip-link"</span><span class="tag">&gt;</span>
+    <span class="text-content">Skip to main content</span>
+<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- 5. Use semantic elements --&gt;</span>
+<span class="tag">&lt;button&gt;</span><span class="text-content">Click me</span><span class="tag">&lt;/button&gt;</span>           <span class="comment">&lt;!-- ✅ Good --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">onclick</span>=<span class="value">"click()"</span><span class="tag">&gt;</span><span class="text-content">Click me</span><span class="tag">&lt;/div&gt;</span>  <span class="comment">&lt;!-- ❌ Bad --&gt;</span>
+
+<span class="comment">&lt;!-- 6. Language attribute --&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;p</span> <span class="attr">lang</span>=<span class="value">"es"</span><span class="tag">&gt;</span><span class="text-content">Hola, mundo!</span><span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- 7. Collapsible content --&gt;</span>
+<span class="tag">&lt;details&gt;</span>
+    <span class="tag">&lt;summary&gt;</span><span class="text-content">Frequently Asked Questions</span><span class="tag">&lt;/summary&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="text-content">Answer to the question goes here...</span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/details&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="info-box success">
+        <div class="info-title">✅ Accessibility Checklist</div>
+        <p>
+          ✔ All images have meaningful
+          <code class="inline">alt</code> text<br />
+          ✔ All form inputs have labels<br />
+          ✔ Page has logical heading hierarchy (h1 → h2 → h3)<br />
+          ✔ Color is not the only way to convey info<br />
+          ✔ Interactive elements are keyboard-accessible<br />
+          ✔ Page language is declared with <code class="inline">lang</code
+          ><br />
+          ✔ Use semantic HTML over div/span when possible
+        </p>
+      </div>
+
+      <div class="real-example">
+        <div class="real-example-title">
+          🌍 Real-World Example: Accessible FAQ Section
+        </div>
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <div class="code-body">
+            <pre><span class="tag">&lt;section</span> <span class="attr">aria-labelledby</span>=<span class="value">"faq-title"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="attr">id</span>=<span class="value">"faq-title"</span><span class="tag">&gt;</span><span class="text-content">Frequently Asked Questions</span><span class="tag">&lt;/h2&gt;</span>
+
+    <span class="tag">&lt;details&gt;</span>
+        <span class="tag">&lt;summary&gt;</span><span class="text-content">What is your return policy?</span><span class="tag">&lt;/summary&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">You can return any item within 30 days
+        of purchase for a full refund.</span><span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/details&gt;</span>
+
+    <span class="tag">&lt;details&gt;</span>
+        <span class="tag">&lt;summary&gt;</span><span class="text-content">Do you offer free shipping?</span><span class="tag">&lt;/summary&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">Yes! Free shipping on all orders over $50.</span><span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/details&gt;</span>
+
+    <span class="tag">&lt;details&gt;</span>
+        <span class="tag">&lt;summary&gt;</span><span class="text-content">How do I track my order?</span><span class="tag">&lt;/summary&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">Once shipped, you'll receive a tracking
+        link via email.</span><span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/details&gt;</span>
+<span class="tag">&lt;/section&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== CHEAT SHEET ==================== -->
+    <section class="section" id="cheatsheet">
+      <div class="section-header">
+        <div class="section-badge">Reference</div>
+        <h2 class="section-title">HTML Cheat Sheet</h2>
+        <p class="section-desc">
+          Quick reference for the most commonly used HTML elements
+        </p>
+      </div>
+
+      <div class="cheat-grid">
+        <div class="cheat-card fade-in">
+          <h4>🏗️ Document Structure</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;!DOCTYPE html&gt;</span
+            ><span>HTML5 declaration</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;html&gt;</span
+            ><span>Root element</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;head&gt;</span
+            ><span>Metadata container</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;body&gt;</span
+            ><span>Visible content</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;title&gt;</span
+            ><span>Page title (tab)</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;meta&gt;</span
+            ><span>Metadata info</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;link&gt;</span
+            ><span>External resources</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;script&gt;</span
+            ><span>JavaScript</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;style&gt;</span
+            ><span>Internal CSS</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>📝 Text Content</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;h1&gt;-&lt;h6&gt;</span
+            ><span>Headings</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;p&gt;</span><span>Paragraph</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;br&gt;</span><span>Line break</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;hr&gt;</span
+            ><span>Horizontal rule</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;blockquote&gt;</span
+            ><span>Block quote</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;pre&gt;</span
+            ><span>Preformatted text</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;code&gt;</span
+            ><span>Code snippet</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>✍️ Inline Text</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;strong&gt;</span
+            ><span>Strong (bold)</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;em&gt;</span
+            ><span>Emphasis (italic)</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;mark&gt;</span
+            ><span>Highlight</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;del&gt;</span
+            ><span>Strikethrough</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;ins&gt;</span
+            ><span>Inserted (underline)</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;sub&gt;</span><span>Subscript</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;sup&gt;</span
+            ><span>Superscript</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;small&gt;</span
+            ><span>Small text</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;abbr&gt;</span
+            ><span>Abbreviation</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>🔗 Links & Media</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;a&gt;</span><span>Hyperlink</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;img&gt;</span><span>Image</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;video&gt;</span
+            ><span>Video player</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;audio&gt;</span
+            ><span>Audio player</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;source&gt;</span
+            ><span>Media source</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;picture&gt;</span
+            ><span>Responsive image</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;figure&gt;</span
+            ><span>Figure container</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;figcaption&gt;</span
+            ><span>Figure caption</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;iframe&gt;</span
+            ><span>Embed frame</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>📋 Lists & Tables</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;ul&gt;</span
+            ><span>Unordered list</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;ol&gt;</span
+            ><span>Ordered list</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;li&gt;</span><span>List item</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;dl&gt;</span
+            ><span>Description list</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;table&gt;</span><span>Table</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;thead&gt;</span
+            ><span>Table header</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;tbody&gt;</span
+            ><span>Table body</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;tr&gt;</span><span>Table row</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;th&gt; / &lt;td&gt;</span
+            ><span>Header / Data cell</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>📝 Forms</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;form&gt;</span
+            ><span>Form container</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;input&gt;</span
+            ><span>Input field</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;label&gt;</span
+            ><span>Input label</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;textarea&gt;</span
+            ><span>Multi-line input</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;select&gt;</span
+            ><span>Dropdown</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;option&gt;</span
+            ><span>Dropdown option</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;button&gt;</span><span>Button</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;fieldset&gt;</span
+            ><span>Field group</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;datalist&gt;</span
+            ><span>Autocomplete list</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>📐 Semantic Layout</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;header&gt;</span
+            ><span>Page/section header</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;nav&gt;</span
+            ><span>Navigation</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;main&gt;</span
+            ><span>Main content</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;article&gt;</span
+            ><span>Self-contained</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;section&gt;</span
+            ><span>Thematic group</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;aside&gt;</span><span>Sidebar</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;footer&gt;</span
+            ><span>Page/section footer</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;details&gt;</span
+            ><span>Expandable</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">&lt;summary&gt;</span
+            ><span>Details label</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>🔧 Input Types</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">text</span><span>Plain text</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">email</span
+            ><span>Email validation</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">password</span><span>Hidden input</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">number</span><span>Numeric input</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">date</span><span>Date picker</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">checkbox</span
+            ><span>Toggle on/off</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">radio</span><span>Single choice</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">file</span><span>File upload</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">range</span><span>Slider</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">color</span><span>Color picker</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">url</span><span>URL validation</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">search</span><span>Search field</span>
+          </div>
+        </div>
+
+        <div class="cheat-card fade-in">
+          <h4>♿ Accessibility</h4>
+          <div class="cheat-item">
+            <span class="cheat-element">alt=""</span><span>Image alt text</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">aria-label</span
+            ><span>Accessible name</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">aria-hidden</span
+            ><span>Hide from screen readers</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">aria-expanded</span
+            ><span>Toggle state</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">role=""</span><span>Element role</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">tabindex</span><span>Focus order</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">lang=""</span><span>Language</span>
+          </div>
+          <div class="cheat-item">
+            <span class="cheat-element">title=""</span><span>Tooltip text</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== COMPLETE PAGE EXAMPLE ==================== -->
+    <section class="section" id="full-example">
+      <div class="section-header">
+        <div class="section-badge">Putting It All Together</div>
+        <h2 class="section-title">Complete Web Page Example</h2>
+        <p class="section-desc">
+          A real-world portfolio page using everything you've learned
+        </p>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">HTML — Complete Portfolio Page</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <div class="code-body">
+          <pre><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"viewport"</span> <span class="attr">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="value">"description"</span> <span class="attr">content</span>=<span class="value">"Jane Smith - Full Stack Developer Portfolio"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span><span class="text-content">Jane Smith | Developer Portfolio</span><span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="value">"stylesheet"</span> <span class="attr">href</span>=<span class="value">"styles.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="comment">&lt;!-- Skip Link --&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"#main"</span> <span class="attr">class</span>=<span class="value">"skip-link"</span><span class="tag">&gt;</span><span class="text-content">Skip to content</span><span class="tag">&lt;/a&gt;</span>
+
+    <span class="comment">&lt;!-- Header & Navigation --&gt;</span>
+    <span class="tag">&lt;header&gt;</span>
+        <span class="tag">&lt;nav</span> <span class="attr">aria-label</span>=<span class="value">"Primary"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span> <span class="attr">class</span>=<span class="value">"logo"</span><span class="tag">&gt;</span><span class="text-content">JS</span><span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;ul&gt;</span>
+                <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"#about"</span><span class="tag">&gt;</span><span class="text-content">About</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"#projects"</span><span class="tag">&gt;</span><span class="text-content">Projects</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"#contact"</span><span class="tag">&gt;</span><span class="text-content">Contact</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/nav&gt;</span>
+    <span class="tag">&lt;/header&gt;</span>
+
+    <span class="comment">&lt;!-- Main Content --&gt;</span>
+    <span class="tag">&lt;main</span> <span class="attr">id</span>=<span class="value">"main"</span><span class="tag">&gt;</span>
+        <span class="comment">&lt;!-- Hero Section --&gt;</span>
+        <span class="tag">&lt;section</span> <span class="attr">id</span>=<span class="value">"about"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h1&gt;</span><span class="text-content">Hi, I'm </span><span class="tag">&lt;strong&gt;</span><span class="text-content">Jane Smith</span><span class="tag">&lt;/strong&gt;</span><span class="tag">&lt;/h1&gt;</span>
+            <span class="tag">&lt;p&gt;</span><span class="text-content">A full-stack developer passionate about
+            building </span><span class="tag">&lt;em&gt;</span><span class="text-content">beautiful</span><span class="tag">&lt;/em&gt;</span><span class="text-content"> web experiences.</span><span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;figure&gt;</span>
+                <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="value">"profile.jpg"</span> <span class="attr">alt</span>=<span class="value">"Jane Smith portrait"</span>
+                     <span class="attr">width</span>=<span class="value">"300"</span> <span class="attr">height</span>=<span class="value">"300"</span> <span class="attr">loading</span>=<span class="value">"lazy"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;/figure&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"resume.pdf"</span> <span class="attr">download</span><span class="tag">&gt;</span><span class="text-content">📄 Download Resume</span><span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/section&gt;</span>
+
+        <span class="comment">&lt;!-- Skills --&gt;</span>
+        <span class="tag">&lt;section&gt;</span>
+            <span class="tag">&lt;h2&gt;</span><span class="text-content">Skills</span><span class="tag">&lt;/h2&gt;</span>
+            <span class="tag">&lt;ul&gt;</span>
+                <span class="tag">&lt;li&gt;</span><span class="text-content">HTML5 &amp; CSS3</span><span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;</span><span class="text-content">JavaScript / TypeScript</span><span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;</span><span class="text-content">React &amp; Node.js</span><span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/section&gt;</span>
+
+        <span class="comment">&lt;!-- Projects --&gt;</span>
+        <span class="tag">&lt;section</span> <span class="attr">id</span>=<span class="value">"projects"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h2&gt;</span><span class="text-content">Projects</span><span class="tag">&lt;/h2&gt;</span>
+            <span class="tag">&lt;article&gt;</span>
+                <span class="tag">&lt;h3&gt;</span><span class="text-content">E-Commerce App</span><span class="tag">&lt;/h3&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="text-content">Built with React and Stripe...</span><span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"https://github.com/jane"</span>
+                   <span class="attr">target</span>=<span class="value">"_blank"</span> <span class="attr">rel</span>=<span class="value">"noopener"</span><span class="tag">&gt;</span><span class="text-content">View on GitHub</span><span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;/article&gt;</span>
+        <span class="tag">&lt;/section&gt;</span>
+
+        <span class="comment">&lt;!-- Contact Form --&gt;</span>
+        <span class="tag">&lt;section</span> <span class="attr">id</span>=<span class="value">"contact"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h2&gt;</span><span class="text-content">Get In Touch</span><span class="tag">&lt;/h2&gt;</span>
+            <span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="value">"/api/contact"</span> <span class="attr">method</span>=<span class="value">"POST"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"c-name"</span><span class="tag">&gt;</span><span class="text-content">Name</span><span class="tag">&lt;/label&gt;</span>
+                <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"text"</span> <span class="attr">id</span>=<span class="value">"c-name"</span> <span class="attr">name</span>=<span class="value">"name"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"c-email"</span><span class="tag">&gt;</span><span class="text-content">Email</span><span class="tag">&lt;/label&gt;</span>
+                <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="value">"email"</span> <span class="attr">id</span>=<span class="value">"c-email"</span> <span class="attr">name</span>=<span class="value">"email"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"c-msg"</span><span class="tag">&gt;</span><span class="text-content">Message</span><span class="tag">&lt;/label&gt;</span>
+                <span class="tag">&lt;textarea</span> <span class="attr">id</span>=<span class="value">"c-msg"</span> <span class="attr">name</span>=<span class="value">"message"</span> <span class="attr">rows</span>=<span class="value">"5"</span> <span class="attr">required</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+                <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span><span class="text-content">Send Message</span><span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/section&gt;</span>
+    <span class="tag">&lt;/main&gt;</span>
+
+    <span class="comment">&lt;!-- Footer --&gt;</span>
+    <span class="tag">&lt;footer&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="text-content">&amp;copy; 2024 Jane Smith</span><span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;address&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"mailto:jane@example.com"</span><span class="tag">&gt;</span><span class="text-content">jane@example.com</span><span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/address&gt;</span>
+    <span class="tag">&lt;/footer&gt;</span>
+
+    <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="value">"app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+      <p>Built with <span class="heart">❤️</span> | HTML Crash Course</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem">
+        Covers 100+ HTML elements • 15 lessons • Ready to build the web! 🚀
+      </p>
+    </footer>
+
+    <!-- ==================== BACK TO TOP ==================== -->
+    <button
+      class="back-to-top"
+      id="backToTop"
+      onclick="scrollToTop()"
+      aria-label="Back to top"
+    >
+      ↑
+    </button>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+      // ==================== Navigation ====================
+      function toggleMenu() {
+        const navLinks = document.getElementById("navLinks");
+        const hamburger = document.getElementById("hamburger");
+        navLinks.classList.toggle("active");
+        hamburger.classList.toggle("active");
+      }
+
+      // Close menu on link click
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () => {
+          document.getElementById("navLinks").classList.remove("active");
+          document.getElementById("hamburger").classList.remove("active");
+        });
+      });
+
+      // ==================== Progress Bar ====================
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        document.getElementById("progressBar").style.width =
+          scrollPercent + "%";
+
+        // Navbar scroll effect
+        const navbar = document.getElementById("navbar");
+        if (scrollTop > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+
+        // Back to top button
+        const backBtn = document.getElementById("backToTop");
+        if (scrollTop > 500) {
+          backBtn.classList.add("visible");
+        } else {
+          backBtn.classList.remove("visible");
+        }
+      });
+
+      // ==================== Scroll to Top ====================
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ==================== Copy Code ====================
+      function copyCode(btn) {
+        const codeBlock = btn.closest(".code-container").querySelector("pre");
+        const text = codeBlock.innerText;
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "✅ Copied!";
+            btn.style.background = "rgba(0, 184, 148, 0.3)";
+            btn.style.borderColor = "rgba(0, 184, 148, 0.5)";
+
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.background = "";
+              btn.style.borderColor = "";
+            }, 2000);
+          })
+          .catch(() => {
+            // Fallback for older browsers
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+
+            btn.innerHTML = "✅ Copied!";
+            setTimeout(() => {
+              btn.innerHTML = "📋 Copy";
+            }, 2000);
+          });
+      }
+
+      // ==================== Fade In on Scroll ====================
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".fade-in").forEach((el) => {
+        observer.observe(el);
+      });
+
+      // ==================== Particles ====================
+      function createParticles() {
+        const container = document.getElementById("particles");
+        if (!container) return;
+
+        const particleCount = 30;
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement("div");
+          particle.classList.add("particle");
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.width = Math.random() * 4 + 2 + "px";
+          particle.style.height = particle.style.width;
+          particle.style.animationDuration = Math.random() * 15 + 10 + "s";
+          particle.style.animationDelay = Math.random() * 10 + "s";
+          particle.style.opacity = Math.random() * 0.3 + 0.1;
+
+          const colors = [
+            "#6c5ce7",
+            "#00cec9",
+            "#fd79a8",
+            "#a29bfe",
+            "#55efc4",
+          ];
+          particle.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          container.appendChild(particle);
+        }
+      }
+
+      createParticles();
+
+      // ==================== Smooth Scroll for Safari ====================
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            const offset = 80;
+            const position =
+              target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top: position, behavior: "smooth" });
+          }
+        });
+      });
+
+      console.log(
+        "%c🚀 HTML Crash Course Loaded!",
+        "color: #6c5ce7; font-size: 20px; font-weight: bold;",
+      );
+      console.log("%cHappy learning! 🎉", "color: #00cec9; font-size: 14px;");
+    </script>
+  </body>
+</html>
